@@ -1,0 +1,10 @@
+[package]
+name = "mnist-burn"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+default = ["burn/default"]
+
+[dependencies]
+burn = { version = "0.12.1", features = ["train", "wgpu", "vision"] }
