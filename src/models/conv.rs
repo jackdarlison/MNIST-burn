@@ -30,10 +30,10 @@ impl ConvModelConfig {
         ConvModel {
             conv1: Conv2dConfig::new([1, 8], [3, 3]).with_padding(PaddingConfig2d::Same).init(device),
             conv2: Conv2dConfig::new([8, 8], [3, 3]).with_padding(PaddingConfig2d::Same).init(device),
-            pool1: MaxPool2dConfig::new([2, 2]).init(),
+            pool1: MaxPool2dConfig::new([2, 2]).with_strides([2, 2]).init(),
             conv3: Conv2dConfig::new([8, 16], [3, 3]).with_padding(PaddingConfig2d::Same).init(device),
             conv4: Conv2dConfig::new([16, 16], [3, 3]).with_padding(PaddingConfig2d::Same).init(device),
-            pool2: MaxPool2dConfig::new([2, 2]).init(),
+            pool2: MaxPool2dConfig::new([2, 2]).with_strides([2, 2]).init(),
             activation: ReLU::new(),
             linear1: LinearConfig::new(16 * 7 * 7, self.hidden_size).init(device),
             linear2: LinearConfig::new(self.hidden_size, self.output_size).init(device),
@@ -49,7 +49,7 @@ impl<B: Backend> ConvModel<B> {
         // Create channel
         let images = images.reshape([batch_size, 1, height, width]);
 
-        let x = self.conv1.forward(images.clone());
+        let x = self.conv1.forward(images);
         let x = self.dropout.forward(x);
         let x = self.activation.forward(x);
 
